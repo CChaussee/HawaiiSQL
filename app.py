@@ -48,13 +48,19 @@ def precipitation():
         rain_data.appened(data_dict)
     return jsonify(rain_data) 
 
-
 @app.route("/api/v1.0/tobs")
 def tobs():
     session = Session(engine)
     tobs = session.query(Measurement.station, Measurement.tobs).\
     filter(Measurement.date.between('2016-08-23', '2017-08-23').all())
     session.close()
+    info = []
+    for i in tobs:
+        tobs_dict = {}
+        tobs_dict['station'] = tobs[0]
+        tobs_dict['tobs'] = tobs[1]
+        info.append(tobs_dict)
+    return jsonify(info)
 @app.route("/api/v1.0/stations")
 def stations():
     session = Session(engine)
