@@ -42,3 +42,13 @@ def precipitation():
 @app.route("/api/v1.0/tobs")
     tobs = session.query(Measurement.station, Measurement.tobs).\
     filter(Measurement.date.between('2016-08-23', '2017-08-23').all())
+
+@app.route("/api/v1.0/stations")
+    stations_list = session.query(Stations.station).all()
+    lists = list(np.ravel(stations_list))
+    return jsonify(lists)
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
