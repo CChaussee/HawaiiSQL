@@ -34,25 +34,42 @@ def home():
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
+    session = Session(engine)
     last_year = dt.date(2017,8,23) - dt.timedelta(days = 365)
     last_day = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     precipitation = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date > last_year).order_by(Measurement.date).all()
+    session.close()
+    rain_data = []
+    for i in precipitation:
+        data_dict = {}
+        data_dict['date'] = precipitation[0]
+        data_dict['prcp'] = precipitation[1]
+        rain_data.appened(data_dict)
+    return jsonify(rain_data) 
+
 
 @app.route("/api/v1.0/tobs")
+def tobs():
+    session = Session(engine)
     tobs = session.query(Measurement.station, Measurement.tobs).\
     filter(Measurement.date.between('2016-08-23', '2017-08-23').all())
-
+    session.close()
 @app.route("/api/v1.0/stations")
+def stations():
+    session = Session(engine)
     stations_list = session.query(Stations.station).all()
+    session.close()
     lists = list(np.ravel(stations_list))
     return jsonify(lists)
 
 @app.route("/api/v1.0/<start>")
 def temp_start(start):
-
+    session = Session(engine)
+    session.close()
 @app.route("/api/v1.0/<start>/<end>")
 def temp_end(end):
-
+    session = Session(engine)
+    session.close()
 if __name__ == '__main__':
     app.run(debug=True)
