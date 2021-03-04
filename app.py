@@ -22,7 +22,7 @@ session = Session(engine)
 app = Flask(__name__)
 #creating routes
 @app.route("/")
-def intro():
+def home():
     print("Looking for all API's")
     return(
         f"Available Routes:<br/>"
@@ -32,3 +32,13 @@ def intro():
         f"/api/v1.0/<start><br/>"
         f"/api/v1.0/<start>/<end>") 
 
+@app.route("/api/v1.0/precipitation")
+def precipitation():
+    last_year = dt.date(2017,8,23) - dt.timedelta(days = 365)
+    last_day = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
+    precipitation = session.query(Measurement.date, Measurement.prcp).\
+        filter(Measurement.date > last_year).order_by(Measurement.date).all()
+
+@app.route("/api/v1.0/tobs")
+    tobs = session.query(Measurement.station, Measurement.tobs).\
+    filter(Measurement.date.between('2016-08-23', '2017-08-23').all())
