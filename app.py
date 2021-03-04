@@ -48,7 +48,11 @@ def precipitation():
     lists = list(np.ravel(stations_list))
     return jsonify(lists)
 
+@app.route("/api/v1.0/<start>")
+def temp_start(start):
 
+@app.route("/api/v1.0/<start>/<end>")
+def temp_end(end):
 
 if __name__ == '__main__':
     app.run(debug=True)
