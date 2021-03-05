@@ -29,17 +29,19 @@ def home():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
+        f"/api/v1.0/<start>"
         f"/api/v1.0/<start>/<end>") 
 
 @app.route("/api/v1.0/precipitation")
 def precipitation():
+#starting session and doing query     
     session = Session(engine)
     last_year = dt.date(2017,8,23) - dt.timedelta(days = 365)
     last_day = session.query(Measurement.date).order_by(Measurement.date.desc()).first()
     precipitation = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date > last_year).order_by(Measurement.date).all()
     session.close()
+#creating list to jsonify      
     rain_data = []
     for i in precipitation:
         data_dict = {}
@@ -50,10 +52,12 @@ def precipitation():
 
 @app.route("/api/v1.0/tobs")
 def tobs():
+#starting session and doing query    
     session = Session(engine)
     tobs = session.query(Measurement.station, Measurement.tobs).\
     filter(Measurement.date.between('2016-08-23', '2017-08-23').all())
     session.close()
+#creating list to jsonify      
     info = []
     for i in tobs:
         tobs_dict = {}
@@ -63,19 +67,23 @@ def tobs():
     return jsonify(info)
 @app.route("/api/v1.0/stations")
 def stations():
+#starting session and doing query    
     session = Session(engine)
     stations_list = session.query(Stations.station).all()
     session.close()
+#raveling list to jsonify    
     lists = list(np.ravel(stations_list))
     return jsonify(lists)
 
 @app.route("/api/v1.0/<start>")
 def temp_start(start):
+#starting session and doing query    
     session = Session(engine)
     start_date = ('2016,08,23')
     start = session.query(func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs).\
         filter(Measurement.date >= start_date))
     session.close()
+#creating list to jsonify        
     start_tobs = []
     for i in start:
         start_dict = {}
@@ -86,11 +94,13 @@ def temp_start(start):
     return jsonify(start_tobs)
 @app.route("/api/v1.0/<start>/<end>")
 def temp_end(end):
+#starting session and doing query    
     session = Session(engine)
     end_date = ('2017,08,23')
     end = session.query(func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs).\
         filter(Measurement.date <= end_date))
     session.close()
+#creating list to jsonify    
     end_tobs = []
     for i in start:
         end_dict = {}
