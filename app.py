@@ -99,6 +99,5 @@ def temp_end(end):
         end_dict['Avg'] = tobs[2]
         end_tobs.append(start_dict)
     return jsonify(end_tobs)
-@app.route("/api/v1.0/<start>/<end>")
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
