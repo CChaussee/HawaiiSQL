@@ -75,7 +75,7 @@ def stations():
     lists = list(np.ravel(stations_list))
     return jsonify(lists)
 
-@app.route("/api/v1.0/<start>")
+@app.route("/api/v1.0/start")
 def temp_start(start):
 #starting session and doing query    
     
@@ -92,7 +92,7 @@ def temp_start(start):
         start_dict['Avg'] = tobs[2]
         start_tobs.append(start_dict)
     return jsonify(start_tobs)
-@app.route("/api/v1.0/<start>/<end>")
+@app.route("/api/v1.0/end")
 def temp_end(end):
 #starting session and doing query    
     
